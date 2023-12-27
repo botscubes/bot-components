@@ -1,24 +1,38 @@
 package iodata
 
+import (
+	"encoding/json"
+)
+
 type IOData struct {
 	data map[string]any
 }
 
-func IODataFromJSON(json []byte) IOData {
-	return IOData{
-		data: map[string]any{},
+func NewIODataFromJSON(jsonData []byte) (*IOData, error) {
+	var data map[string]interface{}
+	err := json.Unmarshal(jsonData, &data)
+	if err != nil {
+		return nil, err
 	}
+	return &IOData{
+		data: data,
+	}, nil
 }
 func (d *IOData) getValue(path string) (any, error) {
-	return d.getValueUsingPath()
+	return d.getValueUsingPath(NewPathUnitIterator(path))
 }
 
 func (d *IOData) getValueUsingPath(
-	path ...PathUnit,
+	iter *PathUnitIterator,
 ) (any, error) {
 	var value any = d.data
 	var currentType = Struct
-	for _, val := range path {
+	for iter.HasNext() {
+		val, err := iter.Next()
+		if err != nil {
+			return nil, err
+		}
+
 		if currentType == Array {
 			arr, ok := value.([]any)
 			if !ok {
