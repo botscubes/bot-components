@@ -26,14 +26,14 @@ func (d *IOData) getValueUsingPath(
 	iter *PathUnitIterator,
 ) (any, error) {
 	var value any = d.data
-	var currentType = Struct
+
 	for iter.HasNext() {
 		val, err := iter.Next()
 		if err != nil {
 			return nil, err
 		}
 
-		if currentType == Array {
+		if val.Type == Array {
 			arr, ok := value.([]any)
 			if !ok {
 				return nil, ErrTypeMismatch
@@ -44,13 +44,13 @@ func (d *IOData) getValueUsingPath(
 			}
 			value = arr[val.Index]
 
-		} else if currentType == Struct {
+		} else if val.Type == Struct {
 			m, ok := value.(map[string]any)
 			if !ok {
 				return nil, ErrTypeMismatch
 			}
 
-			if value, ok = m[val.Name]; !ok {
+			if value, ok = m[val.Propery]; !ok {
 				return nil, ErrKeyIsNotInMap
 			}
 
@@ -59,7 +59,6 @@ func (d *IOData) getValueUsingPath(
 			return nil, ErrTypeNotFound
 
 		}
-		currentType = val.Type
 	}
 	return value, nil
 }

@@ -1,6 +1,7 @@
 package iodata
 
 import (
+	"fmt"
 	"strconv"
 )
 
@@ -9,12 +10,11 @@ type PathUnitType = int
 const (
 	Array  = 0
 	Struct = 1
-	Value  = 2
 )
 
 type PathUnit struct {
 	Type    PathUnitType
-	Name    string
+	Propery string
 	Index   int
 	Subpath []*PathUnit
 }
@@ -45,7 +45,7 @@ func isLetter(c byte) bool {
 	return false
 }
 
-func (it *PathUnitIterator) getExplicitArrayIndex(name string) (*PathUnit, error) {
+func (it *PathUnitIterator) getExplicitArrayIndex() (*PathUnit, error) {
 	str := it.path
 	l := it.curr_index
 	for {
@@ -59,13 +59,9 @@ func (it *PathUnitIterator) getExplicitArrayIndex(name string) (*PathUnit, error
 					return nil, err
 				}
 				it.curr_index++
-				if it.curr_index < len(str) {
-					it.curr_index++
-				}
-
 				return &PathUnit{
 					Type:    Array,
-					Name:    name,
+					Propery: "",
 					Index:   idx,
 					Subpath: nil,
 				}, nil
@@ -79,12 +75,12 @@ func (it *PathUnitIterator) getExplicitArrayIndex(name string) (*PathUnit, error
 	}
 }
 
-func (it *PathUnitIterator) getArrayIndex(name string) (*PathUnit, error) {
+func (it *PathUnitIterator) getArrayIndex() (*PathUnit, error) {
 	str := it.path
 	if it.curr_index < len(str) {
 		ch := str[it.curr_index]
 		if isDigit(ch) {
-			return it.getExplicitArrayIndex(name)
+			return it.getExplicitArrayIndex()
 			//						} else if isLetter(ch) || ch == '_' {
 			//							l := it.curr_index
 			//							r := it.curr_index
@@ -116,36 +112,30 @@ func (it *PathUnitIterator) getArrayIndex(name string) (*PathUnit, error) {
 
 }
 
-func (it *PathUnitIterator) Next() (*PathUnit, error) {
+func (it *PathUnitIterator) getStructProperty() (*PathUnit, error) {
 	if it.HasNext() {
 		str := it.path
+		ch := str[it.curr_index]
 		li := it.curr_index
-		ch := str[li]
 		if isLetter(ch) || ch == '_' {
 			for {
-				if it.curr_index+1 < len(str) {
-					it.curr_index++
+				it.curr_index++
+				if it.curr_index < len(str) {
 					ch = str[it.curr_index]
-					if ch == '.' {
-						it.curr_index++
+					if ch == '.' || ch == '[' {
 						return &PathUnit{
 							Type:    Struct,
-							Name:    str[li:it.curr_index],
+							Propery: str[li:it.curr_index],
 							Index:   0,
 							Subpath: nil,
 						}, nil
-					} else if ch == '[' {
-						name := str[li:it.curr_index]
-						it.curr_index++
-						return it.getArrayIndex(name)
 					} else if !isDigit(ch) && !isLetter(ch) && !(ch == '_') {
 						return nil, ErrVariableName
 					}
 				} else {
-					it.curr_index++
 					return &PathUnit{
-						Type:    Value,
-						Name:    str[li:it.curr_index],
+						Type:    Struct,
+						Propery: str[li:it.curr_index],
 						Index:   0,
 						Subpath: nil,
 					}, nil
@@ -153,6 +143,29 @@ func (it *PathUnitIterator) Next() (*PathUnit, error) {
 			}
 		} else {
 			return nil, ErrVariableNameBeginning
+		}
+	} else {
+
+		return nil, ErrVariableNameNotSpecified
+	}
+}
+
+func (it *PathUnitIterator) Next() (*PathUnit, error) {
+	if it.HasNext() {
+		str := it.path
+		li := it.curr_index
+		ch := str[li]
+		if (li == 0) && (isLetter(ch) || ch == '_') {
+			return it.getStructProperty()
+		} else if ch == '.' {
+			it.curr_index++
+			return it.getStructProperty()
+		} else if ch == '[' {
+			it.curr_index++
+			return it.getArrayIndex()
+		} else {
+
+			return nil, fmt.Errorf("%c", ch) //ErrUnknownCharacter
 		}
 	}
 	return nil, nil
