@@ -43,6 +43,7 @@ func (d *IOData) GetValue(path string) (any, error)
 
 - Также возможна их кобинация:
 
+Пример:
 ```
 users[1].phoneNumbers[2]
 ```
@@ -51,15 +52,19 @@ users[2].age
 ```
 
 - Неявное обращение к элементу массива:
+
+Пример:
 ```
 users[userIndex].phoneNumbers[phoneNumberIndex]
 ```
 
 - Неявное обращение к свойствам объекта:
 ```
-.[<property name>]
+.[<path to value>]
 ```
+
+Пример:
 ```
-[propertyName].[properyNameStoringNameOfArray][1]
+[objects[objectIndex].propertyName].[properyNameStoringNameOfArray][1]
 ```
 
