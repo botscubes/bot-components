@@ -47,5 +47,10 @@ func (d *IOData) GetValue(path string) (any, error)
 users[1].phoneNumbers[2]
 ```
 ```
-user[2].age
+users[2].age
+```
+
+- Неявное обращение к элементу массива:
+```
+users[userIndex].phoneNumbers[phoneNumberIndex]
 ```

@@ -18,13 +18,13 @@ func NewIODataFromJSON(jsonData []byte) (*IOData, error) {
 		data: data,
 	}, nil
 }
-func (d *IOData) GetValue(path string) (any, error) {
+func (d *IOData) GetValue(path string) (*Value, error) {
 	return d.getValueUsingPath(NewPathUnitIterator(path))
 }
 
 func (d *IOData) getValueUsingPath(
 	iter *PathUnitIterator,
-) (any, error) {
+) (*Value, error) {
 	var value any = d.data
 
 	for iter.HasNext() {
@@ -38,11 +38,28 @@ func (d *IOData) getValueUsingPath(
 			if !ok {
 				return nil, ErrTypeMismatch
 			}
-			arrSize := len(arr)
-			if val.Index >= arrSize || arrSize < 0 {
-				return nil, ErrIndexOutOfRange
+			if val.Subpath != nil {
+				val, err := d.getValueUsingPath(val.Subpath)
+				if err != nil {
+					return nil, err
+				}
+				idx, err := val.ToInt()
+				if err != nil {
+					return nil, err
+				}
+				arrSize := len(arr)
+				if idx >= arrSize || arrSize < 0 {
+					return nil, ErrIndexOutOfRange
+				}
+				value = arr[idx]
+
+			} else {
+				arrSize := len(arr)
+				if val.Index >= arrSize || arrSize < 0 {
+					return nil, ErrIndexOutOfRange
+				}
+				value = arr[val.Index]
 			}
-			value = arr[val.Index]
 
 		} else if val.Type == Struct {
 			m, ok := value.(map[string]any)
@@ -60,5 +77,5 @@ func (d *IOData) getValueUsingPath(
 
 		}
 	}
-	return value, nil
+	return &Value{data: value}, nil
 }

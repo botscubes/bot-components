@@ -16,7 +16,7 @@ type PathUnit struct {
 	Type    PathUnitType
 	Propery string
 	Index   int
-	Subpath []*PathUnit
+	Subpath *PathUnitIterator
 }
 
 type PathUnitIterator struct {
@@ -81,28 +81,34 @@ func (it *PathUnitIterator) getArrayIndex() (*PathUnit, error) {
 		ch := str[it.curr_index]
 		if isDigit(ch) {
 			return it.getExplicitArrayIndex()
-			//						} else if isLetter(ch) || ch == '_' {
-			//							l := it.curr_index
-			//							r := it.curr_index
-			//							openBracketCount := 0
-			//							for {
-			//								r++
-			//								if r < len(str) {
-			//									ch = str[r]
-			//									if ch == ']' {
 
-			//									}
-			//									return &PathUnit{
-			//										Type:    Array,
-			//										Name:    str[li:it.curr_index],
-			//										Index:   0,
-			//										Subpath: nil,
-			//									}, nil
-			//								} else {
-			//									return nil, ErrNoClosingSquareBracket
-			//								}
+		} else if isLetter(ch) || ch == '_' {
+			l := it.curr_index
+			openBracketCount := 0
+			for {
+				it.curr_index++
+				if it.curr_index < len(str) {
+					if str[it.curr_index] == ']' {
+						if openBracketCount == 0 {
+							subpath := NewPathUnitIterator(str[l:it.curr_index])
+							it.curr_index++
+							return &PathUnit{
+								Type:    Array,
+								Propery: "",
+								Index:   0,
+								Subpath: subpath,
+							}, nil
+						} else {
+							openBracketCount--
+						}
+					} else if str[it.curr_index] == '[' {
+						openBracketCount++
+					}
+				} else {
+					return nil, ErrNoClosingSquareBracket
+				}
+			}
 
-			//							}
 		} else {
 			return nil, ErrVariableName
 		}
