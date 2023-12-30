@@ -58,7 +58,7 @@ users[2].age
 users[userIndex].phoneNumbers[phoneNumberIndex]
 ```
 
-- Неявное обращение к свойствам объекта:
+- Неявное обращение к свойствy объекта:
 ```
 .[<path to value>]
 ```
