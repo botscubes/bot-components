@@ -18,7 +18,7 @@ func NewIODataFromJSON(jsonData []byte) (*IOData, error) {
 		data: data,
 	}, nil
 }
-func (d *IOData) getValue(path string) (any, error) {
+func (d *IOData) GetValue(path string) (any, error) {
 	return d.getValueUsingPath(NewPathUnitIterator(path))
 }
 

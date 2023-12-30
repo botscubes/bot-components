@@ -35,7 +35,7 @@ func TestGetNameFromIOData(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.getValue("users[0].name")
+	value, err := iodata.GetValue("users[0].name")
 	if err != nil {
 		t.Error(err)
 	}
@@ -53,7 +53,7 @@ func TestGetPhoneNumberFromIOData(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.getValue("users[0].phoneNumbers[1]")
+	value, err := iodata.GetValue("users[0].phoneNumbers[1]")
 	if err != nil {
 		t.Error(err)
 	}
@@ -71,7 +71,7 @@ func TestGetAgeFromIOData(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.getValue("users[1].age")
+	value, err := iodata.GetValue("users[1].age")
 	if err != nil {
 		t.Error(err)
 	}
@@ -89,7 +89,7 @@ func TestValueFromIOData(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.getValue("value")
+	value, err := iodata.GetValue("value")
 	if err != nil {
 		t.Error(err)
 	}
@@ -107,7 +107,7 @@ func TestArrayValueFromIOData(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.getValue("array[2]")
+	value, err := iodata.GetValue("array[2]")
 	if err != nil {
 		t.Error(err)
 	}
