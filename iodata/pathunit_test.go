@@ -26,7 +26,11 @@ var testJson = `
 		"b",
 		"c"
 	],
-	"arrayIndex": 1
+	"arrayIndex": 1,
+	"indices": {
+		"users": [1, 0],
+		"phoneNumber": 0
+	}
 }`
 
 func TestGetNameFromIOData(t *testing.T) {
@@ -134,5 +138,22 @@ func TestImplicitAccessToArrayElement(t *testing.T) {
 	}
 	if v != "b" {
 		t.Errorf("Value is wrong")
+	}
+}
+func TestImplicitlyGetPhoneNumberFromIOData(t *testing.T) {
+	var iodata, err = NewIODataFromJSON([]byte(testJson))
+	if err != nil {
+		t.Error(err)
+	}
+	value, err := iodata.GetValue("users[indices.users[1]].phoneNumbers[indices.phoneNumber]")
+	if err != nil {
+		t.Error(err)
+	}
+	phone, err := value.ToString()
+	if err != nil {
+		t.Error(err)
+	}
+	if phone != "11111111" {
+		t.Errorf("The phone is wrong. Value: %s", phone)
 	}
 }
