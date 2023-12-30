@@ -19,6 +19,9 @@ var testJson = `
 		{
 			"name": "Andrey",
 			"age": 24
+		},
+		{
+
 		}
 	],
 	"array": [
@@ -30,7 +33,9 @@ var testJson = `
 	"indices": {
 		"users": [1, 0],
 		"phoneNumber": 0
-	}
+	},
+	"property": "users",
+	"property2": "phoneNumber"
 }`
 
 func TestGetNameFromIOData(t *testing.T) {
@@ -146,6 +151,40 @@ func TestImplicitlyGetPhoneNumberFromIOData(t *testing.T) {
 		t.Error(err)
 	}
 	value, err := iodata.GetValue("users[indices.users[1]].phoneNumbers[indices.phoneNumber]")
+	if err != nil {
+		t.Error(err)
+	}
+	phone, err := value.ToString()
+	if err != nil {
+		t.Error(err)
+	}
+	if phone != "11111111" {
+		t.Errorf("The phone is wrong. Value: %s", phone)
+	}
+}
+func TestGetUserAgeFromIODataUsingImplicitPropery(t *testing.T) {
+	var iodata, err = NewIODataFromJSON([]byte(testJson))
+	if err != nil {
+		t.Error(err)
+	}
+	value, err := iodata.GetValue("[property][0].age")
+	if err != nil {
+		t.Error(err)
+	}
+	age, err := value.ToInt()
+	if err != nil {
+		t.Error(err)
+	}
+	if age != 20 {
+		t.Errorf("The phone is wrong. Value: %d", age)
+	}
+}
+func TestGetPhoneNumberFromIODataUsingImplicitPropery(t *testing.T) {
+	var iodata, err = NewIODataFromJSON([]byte(testJson))
+	if err != nil {
+		t.Error(err)
+	}
+	value, err := iodata.GetValue("[property][indices.[property][1]].phoneNumbers[indices.[property2]]")
 	if err != nil {
 		t.Error(err)
 	}

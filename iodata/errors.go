@@ -1,12 +1,15 @@
 package iodata
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 var (
-	ErrTypeMismatch    = errors.New("Type mismatch")
-	ErrTypeNotFound    = errors.New("Type not found")
-	ErrIndexOutOfRange = errors.New("Index out of range")
-	ErrKeyIsNotInMap   = errors.New("The key is not in the map")
+	ErrTypeAssertion      = errors.New("Type assertion")
+	ErrTypeNotFound       = errors.New("Type not found")
+	ErrIndexOutOfRange    = errors.New("Index out of range")
+	ErrNoPropertyInObject = errors.New("No property in object")
 )
 
 var (
@@ -17,3 +20,18 @@ var (
 	ErrUnknownCharacter         = errors.New("Unknown character")
 	ErrVariableNameNotSpecified = errors.New("Variable name not specified")
 )
+
+func NewErrTypeAssertion(currentType string, expextedType string) error {
+	return fmt.Errorf("%w: Current type: %s, Expexted type: %s", ErrTypeAssertion, currentType, expextedType)
+}
+func NewErrIndexOutOfRange(arrayName string, currentIndex int, from int, to int) error {
+	return fmt.Errorf("%w: array name: %s, index: %d, range: [%d:%d]",
+		ErrIndexOutOfRange,
+		arrayName,
+		currentIndex,
+		from,
+		to)
+}
+func NewErrNoPropertyInObject(obj string, property string) error {
+	return fmt.Errorf("%w: object name: %s, property: %s", ErrNoPropertyInObject, obj, property)
+}

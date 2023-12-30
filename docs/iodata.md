@@ -9,7 +9,7 @@ IOData находятся данные неопределенного типа.
 
 ## Создание 
 
-Структура IOData создаётся из JSON следующим методом:
+Объект IOData создаётся из JSON следующим методом:
 
 ```golang
 func NewIODataFromJSON(jsonData []byte) (*IOData, error) 
@@ -17,7 +17,7 @@ func NewIODataFromJSON(jsonData []byte) (*IOData, error)
 
 ## Обращение к данным
 
-Для обращения к данным у стуктуры IOData реализован следующий метод:
+Для обращения к данным у структуры IOData реализован следующий метод:
 
 ```golang
 func (d *IOData) GetValue(path string) (any, error)
@@ -31,7 +31,7 @@ func (d *IOData) GetValue(path string) (any, error)
 <property name>
 ```
 
-- Для обращения к полю структуры:
+- Для обращения к свойству объекта:
 ```
 .<property name>
 ```
@@ -54,3 +54,12 @@ users[2].age
 ```
 users[userIndex].phoneNumbers[phoneNumberIndex]
 ```
+
+- Неявное обращение к свойствам объекта:
+```
+.[<property name>]
+```
+```
+[propertyName].[properyNameStoringNameOfArray][1]
+```
+

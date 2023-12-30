@@ -1,7 +1,6 @@
 package iodata
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -9,7 +8,7 @@ type PathUnitType = int
 
 const (
 	Array  = 0
-	Struct = 1
+	Object = 1
 )
 
 type PathUnit struct {
@@ -130,7 +129,7 @@ func (it *PathUnitIterator) getStructProperty() (*PathUnit, error) {
 					ch = str[it.curr_index]
 					if ch == '.' || ch == '[' {
 						return &PathUnit{
-							Type:    Struct,
+							Type:    Object,
 							Propery: str[li:it.curr_index],
 							Index:   0,
 							Subpath: nil,
@@ -140,11 +139,37 @@ func (it *PathUnitIterator) getStructProperty() (*PathUnit, error) {
 					}
 				} else {
 					return &PathUnit{
-						Type:    Struct,
+						Type:    Object,
 						Propery: str[li:it.curr_index],
 						Index:   0,
 						Subpath: nil,
 					}, nil
+				}
+			}
+		} else if ch == '[' {
+			l := it.curr_index + 1
+			openBracketCount := 0
+			for {
+				it.curr_index++
+				if it.curr_index < len(str) {
+					if str[it.curr_index] == ']' {
+						if openBracketCount == 0 {
+							subpath := NewPathUnitIterator(str[l:it.curr_index])
+							it.curr_index++
+							return &PathUnit{
+								Type:    Object,
+								Propery: "",
+								Index:   0,
+								Subpath: subpath,
+							}, nil
+						} else {
+							openBracketCount--
+						}
+					} else if str[it.curr_index] == '[' {
+						openBracketCount++
+					}
+				} else {
+					return nil, ErrNoClosingSquareBracket
 				}
 			}
 		} else {
@@ -161,7 +186,7 @@ func (it *PathUnitIterator) Next() (*PathUnit, error) {
 		str := it.path
 		li := it.curr_index
 		ch := str[li]
-		if (li == 0) && (isLetter(ch) || ch == '_') {
+		if (li == 0) && (isLetter(ch) || ch == '_' || ch == '[') {
 			return it.getStructProperty()
 		} else if ch == '.' {
 			it.curr_index++
@@ -171,7 +196,7 @@ func (it *PathUnitIterator) Next() (*PathUnit, error) {
 			return it.getArrayIndex()
 		} else {
 
-			return nil, fmt.Errorf("%c", ch) //ErrUnknownCharacter
+			return nil, ErrUnknownCharacter
 		}
 	}
 	return nil, nil
