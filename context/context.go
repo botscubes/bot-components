@@ -1,29 +1,29 @@
-package iodata
+package context
 
 import (
 	"encoding/json"
 	"reflect"
 )
 
-type IOData struct {
+type Context struct {
 	data map[string]any
 }
 
-func NewIODataFromJSON(jsonData []byte) (*IOData, error) {
+func NewIODataFromJSON(jsonData []byte) (*Context, error) {
 	var data map[string]interface{}
 	err := json.Unmarshal(jsonData, &data)
 	if err != nil {
 		return nil, err
 	}
-	return &IOData{
+	return &Context{
 		data: data,
 	}, nil
 }
-func (d *IOData) GetValue(path string) (*Value, error) {
+func (d *Context) GetValue(path string) (*Value, error) {
 	return d.getValueUsingPath(NewPathUnitIterator(path))
 }
 
-func (d *IOData) getValueUsingPath(
+func (d *Context) getValueUsingPath(
 	iter *PathUnitIterator,
 ) (*Value, error) {
 	var value any = d.data
