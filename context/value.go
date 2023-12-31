@@ -17,6 +17,9 @@ func (v *Value) ToString() (string, error) {
 	case reflect.Float64:
 		s := strconv.FormatFloat(rv.Float(), 'g', -1, 64)
 		return s, nil
+	case reflect.Bool:
+		s := strconv.FormatBool(rv.Bool())
+		return s, nil
 	}
 	return "", NewErrTypeAssertion(reflect.TypeOf(v.data).String(), "string")
 }
