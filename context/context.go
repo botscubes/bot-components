@@ -9,7 +9,7 @@ type Context struct {
 	data map[string]any
 }
 
-func NewIODataFromJSON(jsonData []byte) (*Context, error) {
+func NewContextFromJSON(jsonData []byte) (*Context, error) {
 	var data map[string]interface{}
 	err := json.Unmarshal(jsonData, &data)
 	if err != nil {

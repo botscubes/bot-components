@@ -38,12 +38,12 @@ var testJson = `
 	"property2": "phoneNumber"
 }`
 
-func TestGetNameFromIOData(t *testing.T) {
-	var iodata, err = NewIODataFromJSON([]byte(testJson))
+func TestGetNameFromContext(t *testing.T) {
+	var context, err = NewContextFromJSON([]byte(testJson))
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.GetValue("users[0].name")
+	value, err := context.GetValue("users[0].name")
 	if err != nil {
 		t.Error(err)
 	}
@@ -56,12 +56,12 @@ func TestGetNameFromIOData(t *testing.T) {
 	}
 }
 
-func TestGetPhoneNumberFromIOData(t *testing.T) {
-	var iodata, err = NewIODataFromJSON([]byte(testJson))
+func TestGetPhoneNumberFromContext(t *testing.T) {
+	var context, err = NewContextFromJSON([]byte(testJson))
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.GetValue("users[0].phoneNumbers[1]")
+	value, err := context.GetValue("users[0].phoneNumbers[1]")
 	if err != nil {
 		t.Error(err)
 	}
@@ -74,12 +74,12 @@ func TestGetPhoneNumberFromIOData(t *testing.T) {
 	}
 }
 
-func TestGetAgeFromIOData(t *testing.T) {
-	var iodata, err = NewIODataFromJSON([]byte(testJson))
+func TestGetAgeFromContext(t *testing.T) {
+	var context, err = NewContextFromJSON([]byte(testJson))
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.GetValue("users[1].age")
+	value, err := context.GetValue("users[1].age")
 	if err != nil {
 		t.Error(err)
 	}
@@ -92,12 +92,12 @@ func TestGetAgeFromIOData(t *testing.T) {
 	}
 }
 
-func TestValueFromIOData(t *testing.T) {
-	var iodata, err = NewIODataFromJSON([]byte(testJson))
+func TestValueFromContext(t *testing.T) {
+	var context, err = NewContextFromJSON([]byte(testJson))
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.GetValue("value")
+	value, err := context.GetValue("value")
 	if err != nil {
 		t.Error(err)
 	}
@@ -110,12 +110,12 @@ func TestValueFromIOData(t *testing.T) {
 	}
 }
 
-func TestArrayValueFromIOData(t *testing.T) {
-	var iodata, err = NewIODataFromJSON([]byte(testJson))
+func TestArrayValueFromContext(t *testing.T) {
+	var context, err = NewContextFromJSON([]byte(testJson))
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.GetValue("array[2]")
+	value, err := context.GetValue("array[2]")
 	if err != nil {
 		t.Error(err)
 	}
@@ -129,11 +129,11 @@ func TestArrayValueFromIOData(t *testing.T) {
 }
 
 func TestImplicitAccessToArrayElement(t *testing.T) {
-	var iodata, err = NewIODataFromJSON([]byte(testJson))
+	var context, err = NewContextFromJSON([]byte(testJson))
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.GetValue("array[arrayIndex]")
+	value, err := context.GetValue("array[arrayIndex]")
 	if err != nil {
 		t.Error(err)
 	}
@@ -145,12 +145,12 @@ func TestImplicitAccessToArrayElement(t *testing.T) {
 		t.Errorf("Value is wrong")
 	}
 }
-func TestImplicitlyGetPhoneNumberFromIOData(t *testing.T) {
-	var iodata, err = NewIODataFromJSON([]byte(testJson))
+func TestImplicitlyGetPhoneNumberFromContext(t *testing.T) {
+	var context, err = NewContextFromJSON([]byte(testJson))
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.GetValue("users[indices.users[1]].phoneNumbers[indices.phoneNumber]")
+	value, err := context.GetValue("users[indices.users[1]].phoneNumbers[indices.phoneNumber]")
 	if err != nil {
 		t.Error(err)
 	}
@@ -162,12 +162,12 @@ func TestImplicitlyGetPhoneNumberFromIOData(t *testing.T) {
 		t.Errorf("The phone is wrong. Value: %s", phone)
 	}
 }
-func TestGetUserAgeFromIODataUsingImplicitPropery(t *testing.T) {
-	var iodata, err = NewIODataFromJSON([]byte(testJson))
+func TestGetUserAgeFromContextUsingImplicitPropery(t *testing.T) {
+	var context, err = NewContextFromJSON([]byte(testJson))
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.GetValue("[property][0].age")
+	value, err := context.GetValue("[property][0].age")
 	if err != nil {
 		t.Error(err)
 	}
@@ -179,12 +179,12 @@ func TestGetUserAgeFromIODataUsingImplicitPropery(t *testing.T) {
 		t.Errorf("The phone is wrong. Value: %d", age)
 	}
 }
-func TestGetPhoneNumberFromIODataUsingImplicitPropery(t *testing.T) {
-	var iodata, err = NewIODataFromJSON([]byte(testJson))
+func TestGetPhoneNumberFromContextUsingImplicitPropery(t *testing.T) {
+	var context, err = NewContextFromJSON([]byte(testJson))
 	if err != nil {
 		t.Error(err)
 	}
-	value, err := iodata.GetValue("[property][indices.[property][1]].phoneNumbers[indices.[property2]]")
+	value, err := context.GetValue("[property][indices.[property][1]].phoneNumbers[indices.[property2]]")
 	if err != nil {
 		t.Error(err)
 	}
