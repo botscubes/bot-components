@@ -2,6 +2,7 @@ package context
 
 import (
 	"reflect"
+	"strconv"
 )
 
 type Value struct {
@@ -13,6 +14,9 @@ func (v *Value) ToString() (string, error) {
 	switch rv.Type().Kind() {
 	case reflect.String:
 		return rv.String(), nil
+	case reflect.Float64:
+		s := strconv.FormatFloat(rv.Float(), 'g', -1, 64)
+		return s, nil
 	}
 	return "", NewErrTypeAssertion(reflect.TypeOf(v.data).String(), "string")
 }

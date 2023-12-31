@@ -27,7 +27,7 @@ func (d *Context) getValueUsingPath(
 	iter *PathUnitIterator,
 ) (*Value, error) {
 	var value any = d.data
-	objectOrArrayName := "IOData"
+	objectOrArrayName := "Context"
 
 	for iter.HasNext() {
 		val, err := iter.Next()
