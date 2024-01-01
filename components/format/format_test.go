@@ -30,14 +30,13 @@ func TestCheckBackslash(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	s, err := Format("\\\\тест \\} test\\\\ \\} \\{\\{", ctx)
+	s, err := Format("\\\\тест } test\\\\ } {{ \\$ \\$ \\$\\$", ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if s != "\\тест } test\\ } {{" {
+	if s != "\\тест } test\\ } {{ $ $ $$" {
 		t.Fatalf("Not equal: current string: %s", s)
 	}
-
 }
 
 func TestCheckReplacements(t *testing.T) {
@@ -45,7 +44,7 @@ func TestCheckReplacements(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	s, err := Format("\\{ post_id = { posts[currentPostIndex].id }, post_title = {   posts[currentPostIndex].title  }, post_description = {posts[currentPostIndex].description}, posted = {posts[currentPostIndex].posted} \\}", ctx)
+	s, err := Format("{ post_id = ${ posts[currentPostIndex].id }, post_title = ${   posts[currentPostIndex].title  }, post_description = ${posts[currentPostIndex].description}, posted = ${posts[currentPostIndex].posted} }", ctx)
 	if err != nil {
 		t.Fatal(err)
 	}

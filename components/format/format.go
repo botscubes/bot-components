@@ -10,33 +10,54 @@ func Format(str string, data *context.Context) (string, error) {
 	runes := []rune(str)
 	i := 0
 	result := ""
-	var prevRune rune = ' '
 	for i < len(runes) {
-		if prevRune == '\\' || (runes[i] != '{' && runes[i] != '\\' && runes[i] != '}') {
-			result = result + string(runes[i])
-		} else if runes[i] == '{' {
+		if runes[i] == '\\' {
 			i++
-			r, err := getClosingCurlyBracePosition(runes, i)
-			if err != nil {
-				return "", err
+			if i >= len(runes) {
+				return "", ErrUnknowEscapeSequence
 			}
-			v, err := data.GetValue(strings.TrimSpace(string((runes[i:r]))))
-			if err != nil {
-				return "", err
+			if runes[i] == 'n' {
+				result = result + string('\n')
+			} else if runes[i] == 't' {
+				result = result + string('\t')
+			} else if runes[i] == '$' {
+				result = result + string('$')
+			} else if runes[i] == '\\' {
+				result = result + string('\\')
+			} else {
+				return "", ErrUnknowEscapeSequence
 			}
-			s, err := v.ToString()
-			if err != nil {
-				return "", err
+		} else if runes[i] == '$' {
+			i++
+			if i >= len(runes) {
+				return "", ErrNoOpeningCurlyBrace
 			}
-			result = result + s
-			i = r
-		} else if runes[i] == '}' {
-			return "", ErrNoOpeningCurlyBrace
-		}
+			if runes[i] == '{' {
 
-		prevRune = runes[i]
+				i++
+				r, err := getClosingCurlyBracePosition(runes, i)
+				if err != nil {
+					return "", err
+				}
+				v, err := data.GetValue(strings.TrimSpace(string((runes[i:r]))))
+				if err != nil {
+					return "", err
+				}
+				s, err := v.ToString()
+				if err != nil {
+					return "", err
+				}
+				result = result + s
+				i = r
+			} else {
+				return "", ErrNoOpeningCurlyBrace
+			}
+		} else if runes[i] != '$' {
+			result = result + string(runes[i])
+		}
 		i++
 	}
+
 	return result, nil
 }
 
