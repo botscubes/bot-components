@@ -52,7 +52,7 @@ func Format(str string, data *context.Context) (string, error) {
 			} else {
 				return "", ErrNoOpeningCurlyBrace
 			}
-		} else if runes[i] != '$' {
+		} else {
 			result = result + string(runes[i])
 		}
 		i++

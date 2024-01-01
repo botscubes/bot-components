@@ -25,31 +25,30 @@ var testJson = `
 	"currentPostIndex": 0
 }`
 
-func TestCheckBackslash(t *testing.T) {
-	var ctx, err = context.NewContextFromJSON([]byte(testJson))
-	if err != nil {
-		t.Fatal(err)
-	}
-	s, err := Format("\\\\тест } test\\\\ } {{ \\$ \\$ \\$\\$", ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if s != "\\тест } test\\ } {{ $ $ $$" {
-		t.Fatalf("Not equal: current string: %s", s)
-	}
+var strsToCheck [][2]string = [][2]string{
+	{
+		"\\\\тест } test\\\\ } {{ \\$ \\$ \\$\\$",
+		"\\тест } test\\ } {{ $ $ $$",
+	},
+	{
+		"{ post_id = ${ posts[currentPostIndex].id }, post_title = ${   posts[currentPostIndex].title  }, post_description = ${posts[currentPostIndex].description}, posted = ${posts[currentPostIndex].posted} }",
+		"{ post_id = 1, post_title = Post1, post_description = Post bla bla bla, posted = false }",
+	},
 }
 
-func TestCheckReplacements(t *testing.T) {
+func TestFormat(t *testing.T) {
 	var ctx, err = context.NewContextFromJSON([]byte(testJson))
 	if err != nil {
 		t.Fatal(err)
 	}
-	s, err := Format("{ post_id = ${ posts[currentPostIndex].id }, post_title = ${   posts[currentPostIndex].title  }, post_description = ${posts[currentPostIndex].description}, posted = ${posts[currentPostIndex].posted} }", ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if s != "{ post_id = 1, post_title = Post1, post_description = Post bla bla bla, posted = false }" {
-		t.Fatalf("Not equal: current string: %s", s)
-	}
+	for _, pair := range strsToCheck {
 
+		s, err := Format(pair[0], ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if s != pair[1] {
+			t.Fatalf("Not equal: current string: %s", s)
+		}
+	}
 }
