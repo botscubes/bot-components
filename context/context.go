@@ -19,14 +19,14 @@ func NewContextFromJSON(jsonData []byte) (*Context, error) {
 		data: data,
 	}, nil
 }
-func (d *Context) GetValue(path string) (*Value, error) {
-	return d.getValueUsingPath(NewPathUnitIterator(path))
+func (ctx *Context) GetValue(path string) (*Value, error) {
+	return ctx.getValueUsingPath(NewPathUnitIterator(path))
 }
 
-func (d *Context) getValueUsingPath(
+func (ctx *Context) getValueUsingPath(
 	iter *PathUnitIterator,
 ) (*Value, error) {
-	var value any = d.data
+	var value any = ctx.data
 	objectOrArrayName := "Context"
 
 	for iter.HasNext() {
@@ -41,7 +41,7 @@ func (d *Context) getValueUsingPath(
 				return nil, NewErrTypeAssertion(reflect.TypeOf(value).String(), "array")
 			}
 			if val.Subpath != nil {
-				val, err := d.getValueUsingPath(val.Subpath)
+				val, err := ctx.getValueUsingPath(val.Subpath)
 				if err != nil {
 					return nil, err
 				}
@@ -69,7 +69,7 @@ func (d *Context) getValueUsingPath(
 				return nil, NewErrTypeAssertion(reflect.TypeOf(value).String(), "map")
 			}
 			if val.Subpath != nil {
-				val, err := d.getValueUsingPath(val.Subpath)
+				val, err := ctx.getValueUsingPath(val.Subpath)
 				if err != nil {
 					return nil, err
 				}
@@ -95,4 +95,85 @@ func (d *Context) getValueUsingPath(
 		}
 	}
 	return &Value{data: value}, nil
+}
+
+func (ctx *Context) SetValue(path string, value any) error {
+	iter := NewPathUnitIterator(path)
+	var data any = ctx.data
+	objectOrArrayName := "Context"
+
+	for iter.HasNext() {
+		val, err := iter.Next()
+		if err != nil {
+			return err
+		}
+
+		if val.Type == Array {
+			arr, ok := data.([]any)
+			if !ok {
+				return NewErrTypeAssertion(reflect.TypeOf(data).String(), "array")
+			}
+			if val.Subpath != nil {
+				val, err := ctx.getValueUsingPath(val.Subpath)
+				if err != nil {
+					return err
+				}
+				idx, err := val.ToInt()
+				if err != nil {
+					return err
+				}
+				arrSize := len(arr)
+				if idx >= arrSize || arrSize < 0 {
+					return NewErrIndexOutOfRange(objectOrArrayName, idx, 0, arrSize)
+				}
+				data = arr[idx]
+
+			} else {
+				arrSize := len(arr)
+				if val.Index >= arrSize || arrSize < 0 {
+					return NewErrIndexOutOfRange(objectOrArrayName, val.Index, 0, arrSize)
+				}
+				if !iter.HasNext() {
+					arr[val.Index] = value
+				} else {
+					data = arr[val.Index]
+				}
+			}
+
+		} else if val.Type == Object {
+			m, ok := data.(map[string]any)
+			if !ok {
+				return NewErrTypeAssertion(reflect.TypeOf(data).String(), "map")
+			}
+			if val.Subpath != nil {
+				val, err := ctx.getValueUsingPath(val.Subpath)
+				if err != nil {
+					return err
+				}
+				property, err := val.ToString()
+				if err != nil {
+					return err
+				}
+				if data, ok = m[property]; !ok {
+					return NewErrNoPropertyInObject(objectOrArrayName, property)
+				}
+				objectOrArrayName = property
+			} else {
+				if !iter.HasNext() {
+					m[val.Propery] = value
+				} else {
+					if data, ok = m[val.Propery]; !ok {
+						return NewErrNoPropertyInObject(objectOrArrayName, val.Propery)
+					}
+					objectOrArrayName = val.Propery
+				}
+			}
+		} else {
+
+			return ErrTypeNotFound
+
+		}
+	}
+	return nil
+
 }

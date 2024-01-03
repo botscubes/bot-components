@@ -5,7 +5,7 @@ import "github.com/botscubes/bot-components/context"
 type Component interface {
 	GetNextComponentId() int
 	GetSavePath() string
-	Execute(ctx *context.Context) (any, error)
+	Execute(ctx *context.Context) (*any, error)
 }
 
 type ComponentData struct {

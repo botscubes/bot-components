@@ -21,7 +21,7 @@ func Execute(ctx *context.Context, tp components.ComponentType, jsonData []byte)
 		return 0, NewErrComponentTypeNotExist(tp)
 	}
 
-	savePath := component.GetSavePath()
+	//savePath := component.GetSavePath()
 
 	nextId := component.GetNextComponentId()
 

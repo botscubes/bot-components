@@ -1,13 +1,21 @@
 package components
 
-import "github.com/botscubes/bot-components/context"
+import (
+	"github.com/botscubes/bot-components/context"
+	"github.com/botscubes/bot-components/format"
+)
 
 type FormatComponent struct {
-	FormatString string `json:"formatString"`
 	ComponentData
+
+	FormatString string `json:"formatString"`
 }
 
-func (fc *FormatComponent) Execute(ctx *context.Context) (any, error) {
-
-	return nil, nil
+func (fc *FormatComponent) Execute(ctx *context.Context) (*any, error) {
+	var s any
+	s, err := format.Format(fc.FormatString, ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &s, nil
 }

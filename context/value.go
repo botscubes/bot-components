@@ -37,3 +37,11 @@ func (v *Value) ToInt() (int, error) {
 	}
 	return int(val), nil
 }
+
+func (v *Value) ToBool() (bool, error) {
+	val, ok := v.data.(bool)
+	if !ok {
+		return false, NewErrTypeAssertion(reflect.TypeOf(v.data).String(), "bool")
+	}
+	return val, nil
+}
