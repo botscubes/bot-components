@@ -9,17 +9,17 @@ type ConditionComponent struct {
 	CheckPath string `json:"checkPath"`
 }
 
-func (cc *ConditionComponent) Execute(ctx *context.Context) (*any, error) {
+func (cc *ConditionComponent) ChangeNextComponentId(ctx *context.Context) error {
 	v, err := ctx.GetValue(cc.CheckPath)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	b, err := v.ToBool()
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if !b {
 		cc.NextComponentId = cc.IdIfFalse
 	}
-	return nil, nil
+	return nil
 }

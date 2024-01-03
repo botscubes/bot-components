@@ -2,15 +2,8 @@ package exec
 
 import (
 	"errors"
-	"fmt"
-
-	"github.com/botscubes/bot-components/components"
 )
 
 var (
-	ErrComponenTypeNotExist = errors.New("Component type does not exist")
+	ErrComponentNotImplInterface = errors.New("The component does not implement the interface")
 )
-
-func NewErrComponentTypeNotExist(tp components.ComponentType) error {
-	return fmt.Errorf("%w: %s", ErrComponenTypeNotExist, tp)
-}
