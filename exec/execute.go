@@ -5,19 +5,19 @@ import (
 	"github.com/botscubes/bot-components/context"
 )
 
-func Execute(ctx *context.Context, component components.Component) (int, error) {
+func Execute(ctx *context.Context, component components.Component) (*int, error) {
 	switch cmp := component.(type) {
 	case components.ActionComponent:
 
 		v, err := cmp.Execute(ctx)
 		if err != nil {
-			return 0, err
+			return nil, err
 		}
-		ctx.SetValue(component.GetSavePath(), v)
+		ctx.SetValue(component.GetPath(), *v)
 	case components.ControlComponent:
 		err := cmp.ChangeNextComponentId(ctx)
 		if err != nil {
-			return 0, err
+			return nil, err
 		}
 
 	//var component components.Component
@@ -30,7 +30,7 @@ func Execute(ctx *context.Context, component components.Component) (int, error) 
 	//	}
 	//	component = &format
 	default:
-		return 0, ErrComponentNotImplInterface
+		return nil, ErrComponentNotImplInterface
 	}
 
 	nextId := component.GetNextComponentId()

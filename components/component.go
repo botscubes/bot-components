@@ -1,10 +1,14 @@
 package components
 
-import "github.com/botscubes/bot-components/context"
+import (
+	"encoding/json"
+
+	"github.com/botscubes/bot-components/context"
+)
 
 type Component interface {
-	GetNextComponentId() int
-	GetSavePath() string
+	GetNextComponentId() *int
+	GetPath() string
 }
 
 type (
@@ -33,16 +37,42 @@ type (
 	}
 )
 
-type ComponentData struct {
-	Type            ComponentType `json:"componentType"`
-	NextComponentId int           `json:"nextComponentId"`
-	SavePath        string        `json:"savePath"`
+type ComponentTypeData struct {
+	Type ComponentType `json:"componentType"`
 }
 
-func (cd *ComponentData) GetNextComponentId() int {
+type ComponentData struct {
+	ComponentTypeData
+
+	NextComponentId *int   `json:"nextComponentId"`
+	Path            string `json:"path"`
+}
+
+func (cd *ComponentData) GetNextComponentId() *int {
 	return cd.NextComponentId
 }
 
-func (cd *ComponentData) GetSavePath() string {
-	return cd.SavePath
+func (cd *ComponentData) GetPath() string {
+	return cd.Path
+}
+
+func NewActionOrControlComponentFromJSON(tp ComponentType, jsonData []byte) (Component, error) {
+	switch tp {
+	case TypeFormat:
+		var f FormatComponent
+		err := json.Unmarshal(jsonData, &f)
+		if err != nil {
+			return nil, err
+		}
+		return &f, nil
+	case TypeCondition:
+		var c ConditionComponent
+		err := json.Unmarshal(jsonData, &c)
+		if err != nil {
+			return nil, err
+		}
+		return &c, err
+	default:
+		return nil, ErrComponentTypeNotExist
+	}
 }

@@ -3,5 +3,6 @@ package components
 type ComponentType = string
 
 const (
-	TypeFormat = "Format"
+	TypeFormat    = "format"
+	TypeCondition = "condition"
 )
