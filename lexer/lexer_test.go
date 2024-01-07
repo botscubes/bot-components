@@ -9,7 +9,7 @@ type comparison struct {
 
 var comparsions []*comparison = []*comparison{
 	{
-		str: "a && b || ccc>=d",
+		str: "a && b || ccc>=d || !(n!=123.23 && m <=  -0.1265)",
 		tokens: []*Token{
 			NewToken(IDENT, "a"),
 			NewToken(LAND, LAND),
@@ -18,6 +18,17 @@ var comparsions []*comparison = []*comparison{
 			NewToken(IDENT, "ccc"),
 			NewToken(GEQ, GEQ),
 			NewToken(IDENT, "d"),
+			NewToken(LOR, LOR),
+			NewToken(EXCLAMINATION, EXCLAMINATION),
+			NewToken(LPAR, LPAR),
+			NewToken(IDENT, "n"),
+			NewToken(NEQ, NEQ),
+			NewToken(FLOAT, "123.23"),
+			NewToken(LAND, LAND),
+			NewToken(IDENT, "m"),
+			NewToken(LEQ, LEQ),
+			NewToken(FLOAT, "-0.1265"),
+			NewToken(RPAR, RPAR),
 		},
 	},
 }
@@ -25,7 +36,7 @@ var comparsions []*comparison = []*comparison{
 func TestLexer(t *testing.T) {
 	for _, c := range comparsions {
 		lx := NewLexer(c.str)
-		tk := lx.NextToken()
+		tk, _ := lx.NextToken()
 		i := 0
 		for tk.Type != EOF {
 			if i >= len(c.tokens) {
@@ -38,7 +49,7 @@ func TestLexer(t *testing.T) {
 			if tk.Value != ctk.Value {
 				t.Fatalf("Values don't match: %s : %s", tk.Value, ctk.Value)
 			}
-			tk = lx.NextToken()
+			tk, _ = lx.NextToken()
 			i++
 		}
 	}

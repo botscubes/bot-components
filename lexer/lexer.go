@@ -26,24 +26,9 @@ func isLetter(c byte) bool {
 	return false
 }
 
-func (lx *Lexer) NextToken() *Token {
+func (lx *Lexer) NextToken() (*Token, *Position) {
 	var token *Token
 
-	//	ILLEGAL = "ILLEGAL"
-	//
-	//	IDENT  = "IDENT"  // x, t, struct
-	//	INT    = "INT"    // 123
-	//	STRING = "STRING" // "abcde"
-
-	//	EQ  = "=="
-	//	NEQ = "!="
-	//	LEQ = "<="
-	//	GEQ = ">="
-	//	LT  = "<"
-	//	GT  = ">"
-	//
-	//	LAND = "&&"
-	//	LOR  = "||"
 	lx.skipSpaces()
 	ch, pos := lx.nextChar()
 	switch ch {
@@ -68,7 +53,12 @@ func (lx *Lexer) NextToken() *Token {
 			token = NewToken(EXCLAMINATION, EXCLAMINATION)
 		}
 	case '-':
-		token = NewToken(MINUS, MINUS)
+		lc, _ := lx.char()
+		if isDigit(lc) {
+			token = lx.getNumberToken(pos)
+		} else {
+			token = NewToken(MINUS, MINUS)
+		}
 	case '|':
 		lc, _ := lx.char()
 		if lc == '|' {
@@ -113,16 +103,16 @@ func (lx *Lexer) NextToken() *Token {
 			token = NewToken(LT, LT)
 		}
 	default:
-		if isLetter(ch) {
-			token = lx.getIdentToken(pos)
+		if isLetter(ch) || ch == '_' {
+			token = lx.getIdentOrKeywordToken(pos)
 		} else if isDigit(ch) {
-			token = lx.getUintToken(pos)
+			token = lx.getNumberToken(pos)
 		} else {
 			token = NewToken(ILLEGAL, string(ch))
 		}
 	}
 
-	return token
+	return token, NewPosition(pos, lx.pos)
 }
 func (lx *Lexer) nextChar() (byte, int) {
 	if lx.isNextChar() {
@@ -155,24 +145,78 @@ func (lx *Lexer) getStringToken() *Token {
 	}
 }
 
-func (lx *Lexer) getUintToken(l int) *Token {
-	if lx.str[l] == '0' {
-		return NewToken(UINT, "0")
+func (lx *Lexer) getNumberToken(l int) *Token {
+	if lx.str[l] == '-' {
+		ch, _ := lx.char()
+		if ch == '0' {
+			lx.pos++
+			ch, _ := lx.char()
+			if ch == '.' {
+				lx.pos++
+				ch, pos := lx.char()
+				if !isDigit(ch) {
+					return NewToken(INCOMPLETEFLOAT, lx.str[l:pos])
+				}
+
+				return NewToken(FLOAT, lx.str[l:pos]+lx.getFraction(pos))
+			}
+			return NewToken(NEGZERO, NEGZERO)
+		}
 	}
+	if lx.str[l] == '0' {
+		ch, _ := lx.char()
+		if ch == '.' {
+			lx.pos++
+			ch, pos := lx.char()
+			if !isDigit(ch) {
+				return NewToken(INCOMPLETEFLOAT, lx.str[l:pos])
+			}
+
+			return NewToken(FLOAT, lx.str[l:pos]+lx.getFraction(pos))
+		}
+
+		return NewToken(INT, "0")
+
+	}
+
 	for {
 		ch, pos := lx.char()
-		if !isDigit(ch) {
-			return NewToken(UINT, lx.str[l:pos])
+		if ch == '.' {
+			lx.pos++
+			ch, pos := lx.char()
+			if !isDigit(ch) {
+				return NewToken(INCOMPLETEFLOAT, lx.str[l:pos])
+			}
+			return NewToken(FLOAT, lx.str[l:pos]+lx.getFraction(pos))
+		} else if !isDigit(ch) {
+			return NewToken(INT, lx.str[l:pos])
 		}
 		lx.pos++
 	}
 }
 
-func (lx *Lexer) getIdentToken(l int) *Token {
+func (lx *Lexer) getFraction(l int) string {
+	for {
+		ch, pos := lx.char()
+		if !isDigit(ch) {
+			return lx.str[l:pos]
+		}
+		lx.pos++
+	}
+}
+
+func (lx *Lexer) getIdentOrKeywordToken(l int) *Token {
 	for {
 		ch, pos := lx.char()
 		if !isDigit(ch) && !isLetter(ch) && ch != '_' {
-			return NewToken(IDENT, lx.str[l:pos])
+			str := lx.str[l:pos]
+			switch str {
+			case "true":
+				return NewToken(BOOL, str)
+			case "false":
+				return NewToken(BOOL, str)
+			}
+			return NewToken(IDENT, str)
 		}
 		lx.pos++
 	}
