@@ -31,6 +31,13 @@ var comparsions []*comparison = []*comparison{
 			NewToken(RPAR, RPAR),
 		},
 	},
+	{
+		str: "\"ффаааппппв\" \"ффффываы ",
+		tokens: []*Token{
+			NewToken(STRING, "ффаааппппв"),
+			NewToken(INCOMPLETESTR, "ффффываы "),
+		},
+	},
 }
 
 func TestLexer(t *testing.T) {
@@ -39,8 +46,9 @@ func TestLexer(t *testing.T) {
 		tk, _ := lx.NextToken()
 		i := 0
 		for tk.Type != EOF {
+			t.Logf("Token: type: %s, value: %s", tk.Type, tk.Value)
 			if i >= len(c.tokens) {
-				t.Fatal("Number of elements does not match")
+				t.Fatalf("Number of elements does not match, token: type: %s, value: %s", tk.Type, tk.Value)
 			}
 			ctk := c.tokens[i]
 			if tk.Type != ctk.Type {

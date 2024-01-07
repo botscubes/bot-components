@@ -1,5 +1,7 @@
 package lexer
 
+import "unicode/utf8"
+
 type Lexer struct {
 	str string
 	pos int
@@ -136,12 +138,15 @@ func (lx *Lexer) isNextChar() bool {
 func (lx *Lexer) getStringToken() *Token {
 	l := lx.pos
 	for {
-		ch, pos := lx.nextChar()
-		if ch == 0 {
-			return NewToken(INCOMPLETESTR, lx.str[l:pos])
-		} else if ch == '"' {
+		rune, size := utf8.DecodeRuneInString(lx.str[lx.pos:])
+		if size == 0 {
+			return NewToken(INCOMPLETESTR, lx.str[l:lx.pos])
+		} else if rune == '"' {
+			pos := lx.pos
+			lx.pos = lx.pos + size
 			return NewToken(STRING, lx.str[l:pos])
 		}
+		lx.pos = lx.pos + size
 	}
 }
 
