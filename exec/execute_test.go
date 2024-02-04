@@ -10,25 +10,25 @@ import (
 
 var botComponents map[int]string = map[int]string{
 	1: `{
-		"componentType": "format",
+		"type": "format",
 		"path": "default",
 		"nextComponentId": 2,
 		"formatString": "@ ${default} ^"
 	}`,
 	2: `{
-		"componentType": "condition",
+		"type": "condition",
 		"path": "condition",
 		"nextComponentId": 3,
 		"idIfFalse": 4
 	}`,
 	3: `{
-		"componentType": "format",
+		"type": "format",
 		"path": "default",
 		"nextComponentId": 4,
 		"formatString": "( ${default} )"
 	}`,
 	4: `{
-		"componentType": "format",
+		"type": "format",
 		"path": "default",
 		"nextComponentId": null,
 		"formatString": "{ ${default} }"

@@ -38,7 +38,7 @@ type (
 )
 
 type ComponentTypeData struct {
-	Type ComponentType `json:"componentType"`
+	Type ComponentType `json:"type"`
 }
 
 type ComponentData struct {
