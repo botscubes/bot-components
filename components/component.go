@@ -62,7 +62,7 @@ func (cd *ComponentData) GetIdIfError() *int64 {
 	return cd.IdIfError
 }
 
-func NewActionOrControlComponentFromJSON(tp ComponentType, jsonData []byte) (Component, error) {
+func NewComponentFromJSON(tp ComponentType, jsonData []byte) (Component, error) {
 	switch tp {
 	case TypeFormat:
 		var f FormatComponent

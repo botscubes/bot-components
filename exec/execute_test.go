@@ -68,7 +68,7 @@ func TestExecute(t *testing.T) {
 		if err != nil {
 			t.Fatal(*currentComponentId, err)
 		}
-		tmp, err := components.NewActionOrControlComponentFromJSON(d.Type, jsonData)
+		tmp, err := components.NewComponentFromJSON(d.Type, jsonData)
 		if err != nil {
 			t.Fatal(*currentComponentId, err)
 		}
