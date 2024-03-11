@@ -8,7 +8,7 @@ import (
 	"github.com/botscubes/bot-components/context"
 )
 
-var botComponents map[int]string = map[int]string{
+var botComponents map[int64]string = map[int64]string{
 	1: `{
 		"type": "format",
 		"path": "default",
@@ -41,13 +41,25 @@ var contextData = `
 }
 `
 
+type textIO struct{}
+
+func (*textIO) InputText() *string {
+	s := "test"
+	return &s
+}
+func (*textIO) OutputText(text string) {
+
+}
+
 func TestExecute(t *testing.T) {
-	var id = 1
-	var currentComponentId *int = &id
+
+	var id int64 = 1
+	var currentComponentId *int64 = &id
 	ctx, err := context.NewContextFromJSON([]byte(contextData))
 	if err != nil {
 		t.Fatal(err)
 	}
+	var e = NewExecutor(ctx, &textIO{})
 	for currentComponentId != nil {
 		t.Logf("%d", *currentComponentId)
 		jsonData := []byte(botComponents[*currentComponentId])
@@ -60,7 +72,7 @@ func TestExecute(t *testing.T) {
 		if err != nil {
 			t.Fatal(*currentComponentId, err)
 		}
-		nextId, err := Execute(ctx, tmp)
+		nextId, err := e.Execute(tmp)
 		if err != nil {
 			t.Fatal(*currentComponentId, err)
 		}
@@ -74,9 +86,9 @@ func TestExecute(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	e := "{ ( @ text ^ ) }"
-	if s != e {
-		t.Fatalf("Stings don't match: string: %s, expection: %s", s, e)
+	es := "{ ( @ text ^ ) }"
+	if s != es {
+		t.Fatalf("Stings don't match: string: %s, expection: %s", s, es)
 	}
 
 }

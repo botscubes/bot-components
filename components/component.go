@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 
 	"github.com/botscubes/bot-components/context"
+	"github.com/botscubes/bot-components/io"
 )
 
 type Component interface {
-	GetNextComponentId() *int
+	GetNextComponentId() *int64
+	GetIdIfError() *int64
 	GetPath() string
 }
 
@@ -21,19 +23,18 @@ type (
 	ControlComponent interface {
 		Component
 
-		ChangeNextComponentId(ctx *context.Context) error
+		Execute(ctx *context.Context) error
 	}
 
 	InputComponent interface {
 		Component
 
-		Input(ctx *context.Context) (*any, error)
+		Execute(ctx *context.Context, io io.IO) (*any, error)
 	}
-
 	OutputComponent interface {
 		Component
 
-		Output(ctx *context.Context) error
+		Execute(ctx *context.Context, io io.IO) error
 	}
 )
 
@@ -44,16 +45,21 @@ type ComponentTypeData struct {
 type ComponentData struct {
 	ComponentTypeData
 
-	NextComponentId *int   `json:"nextComponentId"`
+	NextComponentId *int64 `json:"nextComponentId"`
+	IdIfError       *int64 `json:"idIfError"`
 	Path            string `json:"path"`
 }
 
-func (cd *ComponentData) GetNextComponentId() *int {
+func (cd *ComponentData) GetNextComponentId() *int64 {
 	return cd.NextComponentId
 }
 
 func (cd *ComponentData) GetPath() string {
 	return cd.Path
+}
+
+func (cd *ComponentData) GetIdIfError() *int64 {
+	return cd.IdIfError
 }
 
 func NewActionOrControlComponentFromJSON(tp ComponentType, jsonData []byte) (Component, error) {
