@@ -8,9 +8,12 @@ import (
 )
 
 type Component interface {
+	GetPath() string
+	GetOutputs() Outputs
+}
+type Outputs interface {
 	GetNextComponentId() *int64
 	GetIdIfError() *int64
-	GetPath() string
 }
 
 type (
@@ -42,24 +45,25 @@ type ComponentTypeData struct {
 	Type ComponentType `json:"type"`
 }
 
-type ComponentData struct {
-	ComponentTypeData
-
+type ComponentOutputs struct {
 	NextComponentId *int64 `json:"nextComponentId"`
 	IdIfError       *int64 `json:"idIfError"`
-	Path            string `json:"path"`
 }
 
-func (cd *ComponentData) GetNextComponentId() *int64 {
-	return cd.NextComponentId
+func (co *ComponentOutputs) GetNextComponentId() *int64 {
+	return co.NextComponentId
+}
+func (co *ComponentOutputs) GetIdIfError() *int64 {
+	return co.IdIfError
+}
+
+type ComponentData struct {
+	ComponentTypeData
+	Path string `json:"path"`
 }
 
 func (cd *ComponentData) GetPath() string {
 	return cd.Path
-}
-
-func (cd *ComponentData) GetIdIfError() *int64 {
-	return cd.IdIfError
 }
 
 func NewComponentFromJSON(tp ComponentType, jsonData []byte) (Component, error) {

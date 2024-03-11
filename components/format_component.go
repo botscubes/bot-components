@@ -8,12 +8,19 @@ import (
 type FormatComponent struct {
 	ComponentData
 
-	FormatString string `json:"formatString"`
+	Outputs ComponentOutputs `json:"outputs"`
+	Data    struct {
+		FormatString string `json:"formatString"`
+	} `json:"data"`
+}
+
+func (fc *FormatComponent) GetOutputs() Outputs {
+	return &fc.Outputs
 }
 
 func (fc *FormatComponent) Execute(ctx *context.Context) (*any, error) {
 	var s any
-	s, err := format.Format(fc.FormatString, ctx)
+	s, err := format.Format(fc.Data.FormatString, ctx)
 	if err != nil {
 		return nil, err
 	}

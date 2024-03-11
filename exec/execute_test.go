@@ -12,26 +12,40 @@ var botComponents map[int64]string = map[int64]string{
 	1: `{
 		"type": "format",
 		"path": "default",
-		"nextComponentId": 2,
-		"formatString": "@ ${default} ^"
+		"outputs": {
+			"nextComponentId": 2
+		},
+		"data": {
+			"formatString": "@ ${default} ^"
+		}
 	}`,
 	2: `{
 		"type": "condition",
 		"path": "condition",
-		"nextComponentId": 3,
-		"idIfFalse": 4
+		"outputs": {
+			"nextComponentId": 3,
+			"idIfFalse": 4
+		}
 	}`,
 	3: `{
 		"type": "format",
 		"path": "default",
-		"nextComponentId": 4,
-		"formatString": "( ${default} )"
+		"outputs": {
+			"nextComponentId": 4
+		},
+		"data": {
+			"formatString": "( ${default} )"
+		}
 	}`,
 	4: `{
 		"type": "format",
 		"path": "default",
-		"nextComponentId": null,
-		"formatString": "{ ${default} }"
+		"outputs": {
+			"nextComponentId": null
+		},
+		"data": {
+			"formatString": "{ ${default} }"
+		}
 	}`,
 }
 var contextData = `

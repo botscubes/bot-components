@@ -24,31 +24,31 @@ func (e *Executor) Execute(component components.Component) (*int64, error) {
 
 		v, err := cmp.Execute(e.ctx)
 		if err != nil {
-			return cmp.GetIdIfError(), err
+			return cmp.GetOutputs().GetIdIfError(), err
 		}
 		e.ctx.SetValue(component.GetPath(), *v)
 	case components.ControlComponent:
 		err := cmp.Execute(e.ctx)
 		if err != nil {
-			return cmp.GetIdIfError(), err
+			return cmp.GetOutputs().GetIdIfError(), err
 		}
 	case components.InputComponent:
 		v, err := cmp.Execute(e.ctx, e.io)
 		if err != nil {
-			return cmp.GetIdIfError(), err
+			return cmp.GetOutputs().GetIdIfError(), err
 		}
 		e.ctx.SetValue(component.GetPath(), *v)
 	case components.OutputComponent:
 		err := cmp.Execute(e.ctx, e.io)
 		if err != nil {
-			return cmp.GetIdIfError(), err
+			return cmp.GetOutputs().GetIdIfError(), err
 		}
 
 	default:
 		return nil, ErrComponentNotImplInterface
 	}
 
-	nextId := component.GetNextComponentId()
+	nextId := component.GetOutputs().GetNextComponentId()
 
 	return nextId, nil
 }
