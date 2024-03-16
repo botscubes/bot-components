@@ -19,6 +19,10 @@ func NewContextFromJSON(jsonData []byte) (*Context, error) {
 		data: data,
 	}, nil
 }
+
+func (ctx *Context) ToJSON() ([]byte, error) {
+	return json.Marshal(ctx.data)
+}
 func (ctx *Context) GetValue(path string) (*Value, error) {
 	return ctx.getValueUsingPath(NewPathUnitIterator(path))
 }
