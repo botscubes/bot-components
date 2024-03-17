@@ -19,6 +19,11 @@ func NewContextFromJSON(jsonData []byte) (*Context, error) {
 		data: data,
 	}, nil
 }
+func NewContext() *Context {
+	return &Context{
+		data: make(map[string]any),
+	}
+}
 
 func (ctx *Context) ToJSON() ([]byte, error) {
 	return json.Marshal(ctx.data)
