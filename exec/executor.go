@@ -26,7 +26,7 @@ func (e *Executor) Execute(component components.Component) (*int64, error) {
 		if err != nil {
 			return cmp.GetOutputs().GetIdIfError(), err
 		}
-		e.ctx.SetValue(component.GetPath(), *v)
+		e.ctx.SetValue(component.GetPath(), v)
 	case components.ControlComponent:
 		err := cmp.Execute(e.ctx)
 		if err != nil {
@@ -37,7 +37,7 @@ func (e *Executor) Execute(component components.Component) (*int64, error) {
 		if err != nil {
 			return cmp.GetOutputs().GetIdIfError(), err
 		}
-		e.ctx.SetValue(component.GetPath(), *v)
+		e.ctx.SetValue(component.GetPath(), v)
 	case components.OutputComponent:
 		err := cmp.Execute(e.ctx, e.io)
 		if err != nil {

@@ -106,7 +106,7 @@ func (ctx *Context) getValueUsingPath(
 	return &Value{data: value}, nil
 }
 
-func (ctx *Context) SetValue(path string, value any) error {
+func (ctx *Context) SetValue(path string, value *any) error {
 	iter := NewPathUnitIterator(path)
 	var data any = ctx.data
 	objectOrArrayName := "Context"
@@ -143,7 +143,7 @@ func (ctx *Context) SetValue(path string, value any) error {
 					return NewErrIndexOutOfRange(objectOrArrayName, val.Index, 0, arrSize)
 				}
 				if !iter.HasNext() {
-					arr[val.Index] = value
+					arr[val.Index] = *value
 				} else {
 					data = arr[val.Index]
 				}
@@ -169,7 +169,7 @@ func (ctx *Context) SetValue(path string, value any) error {
 				objectOrArrayName = property
 			} else {
 				if !iter.HasNext() {
-					m[val.Propery] = value
+					m[val.Propery] = *value
 				} else {
 					if data, ok = m[val.Propery]; !ok {
 						return NewErrNoPropertyInObject(objectOrArrayName, val.Propery)
