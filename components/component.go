@@ -68,6 +68,13 @@ func (cd *ComponentData) GetPath() string {
 
 func NewComponentFromJSON(tp ComponentType, jsonData []byte) (Component, error) {
 	switch tp {
+	case TypeStart:
+		var s StartComponent
+		err := json.Unmarshal(jsonData, &s)
+		if err != nil {
+			return nil, err
+		}
+		return &s, nil
 	case TypeFormat:
 		var f FormatComponent
 		err := json.Unmarshal(jsonData, &f)

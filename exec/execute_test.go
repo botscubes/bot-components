@@ -9,6 +9,14 @@ import (
 )
 
 var botComponents map[int64]string = map[int64]string{
+	0: `{
+		"type": "start",
+		"path": "",
+		"outputs": {
+			"nextComponentId": 1
+		},
+		"data": {}
+	}`,
 	1: `{
 		"type": "format",
 		"path": "default",
@@ -67,7 +75,7 @@ func (*textIO) OutputText(text string) {
 
 func TestExecute(t *testing.T) {
 
-	var id int64 = 1
+	var id int64 = 0
 	var currentComponentId *int64 = &id
 	ctx, err := context.NewContextFromJSON([]byte(contextData))
 	if err != nil {
