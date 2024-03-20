@@ -9,12 +9,18 @@ import (
 type MessageComponent struct {
 	ComponentData
 
-	Text string `json:"text"`
+	Outputs ComponentOutputs `json:"outputs"`
+	Data    struct {
+		Text string `json:"text"`
+	} `json:"data"`
 }
 
-func (fc *MessageComponent) Execute(ctx *context.Context, io io.IO) error {
+func (mc *MessageComponent) GetOutputs() Outputs {
+	return &mc.Outputs
+}
+func (mc *MessageComponent) Execute(ctx *context.Context, io io.IO) error {
 	var s string
-	s, err := format.Format(fc.Text, ctx)
+	s, err := format.Format(mc.Data.Text, ctx)
 	if err != nil {
 		return err
 	}

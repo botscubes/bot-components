@@ -6,4 +6,5 @@ const (
 	TypeStart     = "start"
 	TypeFormat    = "format"
 	TypeCondition = "condition"
+	TypeMessage   = "message"
 )
