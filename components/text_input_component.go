@@ -9,14 +9,21 @@ import (
 
 type TextInputComponent struct {
 	ComponentData
-
-	Text string `json:"text"`
+	Outputs ComponentOutputs `json:"outputs"`
 }
 
-func (fc *TextInputComponent) Execute(ctx *context.Context, io io.IO) (*any, error) {
+func (tc *TextInputComponent) GetOutputs() Outputs {
+	return &tc.Outputs
+}
+
+func (tc *TextInputComponent) Execute(ctx *context.Context, io io.IO) (*any, error) {
 	s := io.InputText()
 	if s == nil {
-		return nil, errors.New("No text was entered")
+		tc.Outputs.NextComponentId = tc.Id
+		return nil, nil
+	}
+	if *s == "" {
+		return nil, errors.New("Empty string entered")
 	}
 	var a any
 	a = *s

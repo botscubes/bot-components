@@ -7,4 +7,5 @@ const (
 	TypeFormat    = "format"
 	TypeCondition = "condition"
 	TypeMessage   = "message"
+	TypeTextInput = "textInput"
 )

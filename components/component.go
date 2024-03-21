@@ -59,6 +59,7 @@ func (co *ComponentOutputs) GetIdIfError() *int64 {
 
 type ComponentData struct {
 	ComponentTypeData
+	Id   *int64 `json:"id"`
 	Path string `json:"path"`
 }
 
@@ -97,6 +98,13 @@ func NewComponentFromJSON(tp ComponentType, jsonData []byte) (Component, error) 
 			return nil, err
 		}
 		return &m, err
+	case TypeTextInput:
+		var ti TextInputComponent
+		err := json.Unmarshal(jsonData, &ti)
+		if err != nil {
+			return nil, err
+		}
+		return &ti, err
 
 	default:
 		return nil, ErrComponentTypeNotExist
