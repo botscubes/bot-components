@@ -30,6 +30,9 @@ var botComponents map[int64]string = map[int64]string{
 	2: `{
 		"type": "condition",
 		"path": "condition",
+		"data": {
+			"expression": "true"
+		},
 		"outputs": {
 			"nextComponentId": 3,
 			"idIfFalse": 4

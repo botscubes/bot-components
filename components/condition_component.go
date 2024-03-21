@@ -1,6 +1,10 @@
 package components
 
-import "github.com/botscubes/bot-components/context"
+import (
+	"strings"
+
+	"github.com/botscubes/bot-components/context"
+)
 
 type ConditionOutputs struct {
 	ComponentOutputs
@@ -10,7 +14,9 @@ type ConditionOutputs struct {
 
 type ConditionComponent struct {
 	ComponentData
-
+	Data struct {
+		Expression string `json:"expression"`
+	} `json:"data"`
 	Outputs ConditionOutputs `json:"outputs"`
 }
 
@@ -19,16 +25,18 @@ func (cc *ConditionComponent) GetOutputs() Outputs {
 }
 
 func (cc *ConditionComponent) Execute(ctx *context.Context) error {
-	v, err := ctx.GetValue(cc.Path)
-	if err != nil {
-		return err
-	}
-	b, err := v.ToBool()
-	if err != nil {
-		return err
-	}
-	if !b {
+
+	if !parseExpression(cc.Data.Expression) {
 		cc.Outputs.NextComponentId = &cc.Outputs.IdIfFalse
 	}
 	return nil
+}
+
+func parseExpression(expression string) bool {
+	expression = strings.TrimSpace(expression)
+	if expression == "true" {
+		return true
+	}
+
+	return false
 }
