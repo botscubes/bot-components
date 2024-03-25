@@ -8,4 +8,5 @@ const (
 	TypeCondition = "condition"
 	TypeMessage   = "message"
 	TypeTextInput = "textInput"
+	TypeButtons   = "buttons"
 )
