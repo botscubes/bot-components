@@ -17,7 +17,7 @@ func (tc *TextInputComponent) GetOutputs() Outputs {
 }
 
 func (tc *TextInputComponent) Execute(ctx *context.Context, io io.IO) (*any, error) {
-	s := io.InputText()
+	s := io.ReadText()
 	if s == nil {
 		tc.Outputs.NextComponentId = tc.Id
 		return nil, nil

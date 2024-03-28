@@ -6,6 +6,7 @@ import (
 
 	"github.com/botscubes/bot-components/components"
 	"github.com/botscubes/bot-components/context"
+	"github.com/botscubes/bot-components/io"
 )
 
 var botComponents map[int64]string = map[int64]string{
@@ -66,16 +67,18 @@ var contextData = `
 }
 `
 
-type textIO struct{}
+type testIO struct{}
 
-func (*textIO) InputText() *string {
+func (*testIO) ReadText() *string {
 	s := "test"
 	return &s
 }
-func (*textIO) OutputText(text string) {
+func (*testIO) PrintText(text string) {
 
 }
+func (*testIO) PrintButtons(text string, buttons []*io.ButtonData) {
 
+}
 func TestExecute(t *testing.T) {
 
 	var id int64 = 0
@@ -84,7 +87,7 @@ func TestExecute(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	var e = NewExecutor(ctx, &textIO{})
+	var e = NewExecutor(ctx, &testIO{})
 	for currentComponentId != nil {
 		t.Logf("%d", *currentComponentId)
 		jsonData := []byte(botComponents[*currentComponentId])

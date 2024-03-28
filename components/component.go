@@ -105,7 +105,13 @@ func NewComponentFromJSON(tp ComponentType, jsonData []byte) (Component, error) 
 			return nil, err
 		}
 		return &ti, err
-
+	case TypeButtons:
+		var bc ButtonComponent
+		err := json.Unmarshal(jsonData, &bc)
+		if err != nil {
+			return nil, err
+		}
+		return &bc, err
 	default:
 		return nil, ErrComponentTypeNotExist
 	}

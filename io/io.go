@@ -1,6 +1,11 @@
 package io
 
+type ButtonData struct {
+	Text string `json:"text"`
+}
+
 type IO interface {
-	OutputText(text string)
-	InputText() *string
+	PrintText(text string)
+	PrintButtons(text string, buttons []*ButtonData)
+	ReadText() *string
 }

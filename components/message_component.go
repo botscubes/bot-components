@@ -24,6 +24,6 @@ func (mc *MessageComponent) Execute(ctx *context.Context, io io.IO) error {
 	if err != nil {
 		return err
 	}
-	io.OutputText(s)
+	io.PrintText(s)
 	return nil
 }
