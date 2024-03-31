@@ -15,16 +15,28 @@ Context находятся данные неопределенного типа.
 func NewContextFromJSON(jsonData []byte) (*Context, error) 
 ```
 
+## Вставка данных
+
+Для вставки данных в Context служит следующий метод:
+
+```golang
+
+func (ctx *Context) SetValue(path string, value *any) error
+
+```
+
 ## Обращение к данным
 
 Для обращения к данным у структуры Context реализован следующий метод:
 
 ```golang
-func (d *Context) GetValue(path string) (any, error)
+func (d *Context) GetValue(path string) (*Value, error)
 ```
 
-Путь к данным имеет следующий синтаксис:
+Функция возвращает значение типа [Value](./value.md).
 
+
+Параметр путь к данным (path) имеет следующий синтаксис:
 
 - Для обращения к полю Context
 ```
@@ -68,3 +80,4 @@ users[userIndex].phoneNumbers[phoneNumberIndex]
 [objects[objectIndex].propertyName].[properyNameStoringNameOfArray][1]
 ```
 
+В случае, если синтаксис пути будет неверен, или там не будет находиться нужная структура или массив, будет возвращена ошибка.
