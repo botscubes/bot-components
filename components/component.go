@@ -34,6 +34,7 @@ type (
 
 		Execute(ctx *context.Context, io io.IO) (*any, error)
 	}
+
 	OutputComponent interface {
 		Component
 
