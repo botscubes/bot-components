@@ -11,7 +11,7 @@
 ## Выходы 
 
 ```
-Outputs: {
+outputs: {
     nextComponentId: number,
 }
 ```
