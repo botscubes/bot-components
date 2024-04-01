@@ -43,7 +43,7 @@ type Outputs interface {
 }
 ```
 
-Для использования данных и выходов компонент должен реализовать следующий интерфейс:
+Для использования данных и выходов компонент должен реализовать следующий <span id="component-interface">интерфейс</span>:
 
 ```golang
 type Component interface {
@@ -107,11 +107,11 @@ type ControlComponent interface {
 type InputComponent interface {
 	Component
 
-	Execute(ctx *Context, io io.IO) (*any, error)
+	Execute(ctx *Context, io IO) (*any, error)
 }
 ```
 
-Метод Execute получает данные от пользователя путем вызовов методов интерфейса ввода-вывода.
+Метод Execute получает данные от пользователя путем вызовов методов [интерфейса ввода-вывода](../io.md).
 
 
 #### Компонент вывода. Output component.
@@ -124,9 +124,9 @@ type InputComponent interface {
 type OutputComponent interface {
 	Component
 
-	Execute(ctx *Context, io io.IO) error
+	Execute(ctx *Context, io IO) error
 }
 ```
 
-Метод Execute выводит данные путем вызовов методов интерфейса ввода-вывода.
+Метод Execute выводит данные путем вызовов методов [интерфейса ввода-вывода](../io.md).
 
