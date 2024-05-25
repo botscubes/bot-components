@@ -186,3 +186,8 @@ func (ctx *Context) SetValue(path string, value *any) error {
 	return nil
 
 }
+
+func (ctx *Context) GetRawValue(key string) (any, bool) {
+	val, ok := ctx.data[key]
+	return val, ok
+}
