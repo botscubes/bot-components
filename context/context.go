@@ -25,6 +25,14 @@ func NewContext() *Context {
 	}
 }
 
+func (ctx *Context) GetKyes() []string {
+	keys := []string{}
+	for key := range ctx.data {
+		keys = append(keys, key)
+	}
+	return keys
+}
+
 func (ctx *Context) ToJSON() ([]byte, error) {
 	return json.Marshal(ctx.data)
 }

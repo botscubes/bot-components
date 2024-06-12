@@ -20,6 +20,9 @@ func (v *Value) ToString() (string, error) {
 	case reflect.Bool:
 		s := strconv.FormatBool(rv.Bool())
 		return s, nil
+	case reflect.Int, reflect.Int64, reflect.Int32:
+		s := strconv.FormatInt(rv.Int(), 10)
+		return s, nil
 	}
 	return "", NewErrTypeAssertion(reflect.TypeOf(v.data).String(), "string")
 }

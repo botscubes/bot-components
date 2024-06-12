@@ -53,10 +53,20 @@ var botComponents map[int64]string = map[int64]string{
 		"type": "format",
 		"path": "default",
 		"outputs": {
-			"nextComponentId": null
+			"nextComponentId": 5
 		},
 		"data": {
 			"formatString": "{ ${default} }"
+		}
+	}`,
+	5: `{
+		"type": "code",
+		"path": "result",
+		"outputs": {
+			"nextComponentId": null
+		},
+		"data": {
+			"code": "1 + 1"
 		}
 	}`,
 }
@@ -118,5 +128,16 @@ func TestExecute(t *testing.T) {
 	if s != es {
 		t.Fatalf("Stings don't match: string: %s, expection: %s", s, es)
 	}
-
+	v, err = ctx.GetValue("result")
+	if err != nil {
+		t.Fatal(err)
+	}
+	s, err = v.ToString()
+	if err != nil {
+		t.Fatal(err)
+	}
+	es = "2"
+	if s != es {
+		t.Fatalf("Stings don't match: string: %s, expection: %s", s, es)
+	}
 }

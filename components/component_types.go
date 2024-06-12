@@ -9,4 +9,5 @@ const (
 	TypeMessage   = "message"
 	TypeTextInput = "textInput"
 	TypeButtons   = "buttons"
+	TypeCode      = "code"
 )
