@@ -25,18 +25,23 @@ func (cc *ConditionComponent) GetOutputs() Outputs {
 }
 
 func (cc *ConditionComponent) Execute(ctx *context.Context) error {
-
-	if !parseExpression(cc.Data.Expression) {
+	expression := strings.TrimSpace(cc.Data.Expression)
+	if expression == "true" {
+		return nil
+	}
+	if expression == "false" {
+		cc.Outputs.NextComponentId = &cc.Outputs.IdIfFalse
+	}
+	value, err := ctx.GetValue(expression)
+	if err != nil {
+		return err
+	}
+	str, err := value.ToString()
+	if err != nil {
+		return err
+	}
+	if str != "true" {
 		cc.Outputs.NextComponentId = &cc.Outputs.IdIfFalse
 	}
 	return nil
-}
-
-func parseExpression(expression string) bool {
-	expression = strings.TrimSpace(expression)
-	if expression == "true" {
-		return true
-	}
-
-	return false
 }
