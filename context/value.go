@@ -27,11 +27,19 @@ func (v *Value) ToString() (string, error) {
 	return "", NewErrTypeAssertion(reflect.TypeOf(v.data).String(), "string")
 }
 func (v *Value) ToInt64() (int64, error) {
-	val, ok := v.data.(float64)
-	if !ok {
-		return 0, NewErrTypeAssertion(reflect.TypeOf(v.data).String(), "int")
+	rv := reflect.ValueOf(v.data)
+	switch rv.Type().Kind() {
+	case reflect.String:
+		i, err := strconv.ParseInt(rv.String(), 10, 64)
+		if err != nil {
+			return 0, err
+		}
+		return i, nil
+	case reflect.Float64:
+		return int64(rv.Float()), nil
 	}
-	return int64(val), nil
+
+	return 0, NewErrTypeAssertion(reflect.TypeOf(v.data).String(), "int64")
 }
 func (v *Value) ToInt() (int, error) {
 	val, ok := v.data.(float64)

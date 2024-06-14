@@ -10,4 +10,5 @@ const (
 	TypeTextInput = "textInput"
 	TypeButtons   = "buttons"
 	TypeCode      = "code"
+	TypeToInt     = "toInt"
 )

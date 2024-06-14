@@ -2,6 +2,7 @@ package components
 
 import (
 	"github.com/botscubes/bot-components/context"
+	"github.com/botscubes/bot-components/format"
 	"github.com/botscubes/bot-components/io"
 	"github.com/botscubes/bql/api"
 )
@@ -19,8 +20,12 @@ func (mc *CodeComponent) GetOutputs() Outputs {
 	return &mc.Outputs
 }
 func (mc *CodeComponent) Execute(ctx *context.Context, io io.IO) (*any, error) {
+	code, err := format.Format(mc.Data.Code, ctx)
+	if err != nil {
+		return nil, err
+	}
 	keys := ctx.GetKyes()
-	v, err := api.EvalWithCtx(mc.Data.Code, ctx, &keys)
+	v, err := api.EvalWithCtx(code, ctx, &keys)
 	if err != nil {
 		return nil, err
 	}
