@@ -1,2 +1,4 @@
 github.com/botscubes/bql v0.0.0-20240530165240-e5c43a472ae5 h1:/x2GBd1O2YkKjUW3sD5CbrWSu+TquuwN8uNKVUT3PGk=
 github.com/botscubes/bql v0.0.0-20240530165240-e5c43a472ae5/go.mod h1:DgMsFnqIeKNWoXM9e8chHtxb+tlNKlK2YtQLzI72V+Q=
+github.com/botscubes/bql v0.0.0-20240616210931-32c3a72e156c h1:6j7ZnEFcWPk5k5J+iPy8Ue1+WEc5iIfcL9lkYb+TQZY=
+github.com/botscubes/bql v0.0.0-20240616210931-32c3a72e156c/go.mod h1:DgMsFnqIeKNWoXM9e8chHtxb+tlNKlK2YtQLzI72V+Q=
