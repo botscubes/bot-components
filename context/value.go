@@ -9,6 +9,10 @@ type Value struct {
 	data any
 }
 
+func (v *Value) GetRawValue() any {
+	return v.data
+}
+
 func (v *Value) ToString() (string, error) {
 	rv := reflect.ValueOf(v.data)
 	switch rv.Type().Kind() {

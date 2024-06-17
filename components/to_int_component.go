@@ -10,8 +10,7 @@ type ToIntComponent struct {
 
 	Outputs ComponentOutputs `json:"outputs"`
 	Data    struct {
-		Source      string `json:"source"`
-		Destination string `json:"destination"`
+		Source string `json:"source"`
 	} `json:"data"`
 }
 
@@ -27,7 +26,6 @@ func (mc *ToIntComponent) Execute(ctx *context.Context, io io.IO) (*any, error) 
 	if err != nil {
 		return nil, err
 	}
-	mc.Path = mc.Data.Destination
 	var a any = i
 	return &a, nil
 }
