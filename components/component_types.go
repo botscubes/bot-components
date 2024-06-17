@@ -11,4 +11,5 @@ const (
 	TypeButtons   = "buttons"
 	TypeCode      = "code"
 	TypeToInt     = "toInt"
+	TypeMove      = "move"
 )
