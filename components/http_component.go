@@ -33,6 +33,10 @@ func (c *HTTPComponent) Execute(ctx *context.Context) (*any, error) {
 	if c.Data.Url == nil {
 		return nil, errors.New("URL not specified")
 	}
+	url, err := format.Format(*c.Data.Url, ctx)
+	if err != nil {
+		return nil, err
+	}
 	var body string = ""
 	if c.Data.Body != nil {
 		var err error
@@ -46,7 +50,7 @@ func (c *HTTPComponent) Execute(ctx *context.Context) (*any, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(
 		*c.Data.Method,
-		*c.Data.Url,
+		url,
 		bytes.NewReader([]byte(body)),
 	)
 	if err != nil {
