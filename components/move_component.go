@@ -2,7 +2,6 @@ package components
 
 import (
 	"github.com/botscubes/bot-components/context"
-	"github.com/botscubes/bot-components/io"
 )
 
 type MoveComponent struct {
@@ -17,7 +16,7 @@ type MoveComponent struct {
 func (mc *MoveComponent) GetOutputs() Outputs {
 	return &mc.Outputs
 }
-func (mc *MoveComponent) Execute(ctx *context.Context, io io.IO) (*any, error) {
+func (mc *MoveComponent) Execute(ctx *context.Context) (*any, error) {
 	var val, err = ctx.GetValue(mc.Data.Source)
 	if err != nil {
 		return nil, err

@@ -12,4 +12,5 @@ const (
 	TypeCode      = "code"
 	TypeToInt     = "toInt"
 	TypeMove      = "move"
+	TypeHTTP      = "http"
 )

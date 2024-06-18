@@ -32,7 +32,7 @@ var botComponents map[int64]string = map[int64]string{
 		"type": "condition",
 		"path": "condition",
 		"data": {
-			"expression": "true"
+			"expression": "condition"
 		},
 		"outputs": {
 			"nextComponentId": 3,
@@ -63,10 +63,22 @@ var botComponents map[int64]string = map[int64]string{
 		"type": "code",
 		"path": "result",
 		"outputs": {
-			"nextComponentId": null
+			"nextComponentId": 6
 		},
 		"data": {
 			"code": "1 + 1"
+		}
+	}`,
+	6: `{
+		"type": "http",
+		"path": "response",
+		"outputs": {
+			"nextComponentId": null
+		},
+		"data": {
+			"method": "GET",
+			"url": "https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=2",
+			"header": ""
 		}
 	}`,
 }
@@ -99,7 +111,6 @@ func TestExecute(t *testing.T) {
 	}
 	var e = NewExecutor(ctx, &testIO{})
 	for currentComponentId != nil {
-		t.Logf("%d", *currentComponentId)
 		jsonData := []byte(botComponents[*currentComponentId])
 		var d components.ComponentTypeData
 		err := json.Unmarshal(jsonData, &d)
@@ -112,32 +123,25 @@ func TestExecute(t *testing.T) {
 		}
 		nextId, err := e.Execute(tmp)
 		if err != nil {
-			t.Fatal(*currentComponentId, err)
+			t.Fatalf("component id: %d, error: %s", *currentComponentId, err)
 		}
 		currentComponentId = nextId
 	}
-	v, err := ctx.GetValue("default")
+	checkString(ctx, t, "default", "{ ( @ text ^ ) }")
+	checkString(ctx, t, "result", "2")
+	checkString(ctx, t, "response.statusCode", "200")
+}
+
+func checkString(ctx *context.Context, t *testing.T, path string, s string) {
+	v, err := ctx.GetValue(path)
 	if err != nil {
 		t.Fatal(err)
 	}
-	s, err := v.ToString()
+	str, err := v.ToString()
 	if err != nil {
 		t.Fatal(err)
 	}
-	es := "{ ( @ text ^ ) }"
-	if s != es {
-		t.Fatalf("Stings don't match: string: %s, expection: %s", s, es)
-	}
-	v, err = ctx.GetValue("result")
-	if err != nil {
-		t.Fatal(err)
-	}
-	s, err = v.ToString()
-	if err != nil {
-		t.Fatal(err)
-	}
-	es = "2"
-	if s != es {
-		t.Fatalf("Stings don't match: string: %s, expection: %s", s, es)
+	if str != s {
+		t.Fatalf("Stings don't match: string: %s, expection: %s", str, s)
 	}
 }

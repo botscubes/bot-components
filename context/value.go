@@ -28,6 +28,11 @@ func (v *Value) ToString() (string, error) {
 		s := strconv.FormatInt(rv.Int(), 10)
 		return s, nil
 	}
+
+	if b, ok := v.data.([]byte); ok {
+		return string(b), nil
+	}
+
 	return "", NewErrTypeAssertion(reflect.TypeOf(v.data).String(), "string")
 }
 func (v *Value) ToInt64() (int64, error) {
