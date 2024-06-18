@@ -62,8 +62,8 @@ func (bc *ButtonComponent) Execute(ctx *context.Context, inout io.IO) (*any, err
 			buttons[i] = bc.Data.Buttons[strconv.Itoa(key)]
 		}
 
-		inout.PrintButtons(bc.Data.Text, buttons)
-		return nil, nil
+		err := inout.PrintButtons(bc.Data.Text, buttons)
+		return nil, err
 	}
 	if *text == "" {
 		return nil, errors.New("Empty string entered")

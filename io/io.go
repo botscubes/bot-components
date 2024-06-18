@@ -5,8 +5,8 @@ type ButtonData struct {
 }
 
 type IO interface {
-	PrintText(text string)
-	PrintButtons(text string, buttons []*ButtonData)
+	PrintText(text string) error
+	PrintButtons(text string, buttons []*ButtonData) error
 	PrintPhoto(file []byte, name string) error
 	ReadText() *string
 }

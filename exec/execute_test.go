@@ -145,11 +145,11 @@ func (*testIO) ReadText() *string {
 func (*testIO) PrintPhoto(file []byte, name string) error {
 	return nil
 }
-func (*testIO) PrintText(text string) {
-
+func (*testIO) PrintText(text string) error {
+	return nil
 }
-func (*testIO) PrintButtons(text string, buttons []*io.ButtonData) {
-
+func (*testIO) PrintButtons(text string, buttons []*io.ButtonData) error {
+	return nil
 }
 func TestExecute(t *testing.T) {
 
