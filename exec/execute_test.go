@@ -71,14 +71,60 @@ var botComponents map[int64]string = map[int64]string{
 	}`,
 	6: `{
 		"type": "http",
-		"path": "response",
+		"path": "response1",
+		"outputs": {
+			"nextComponentId": 7
+		},
+		"data": {
+			"method": "GET",
+			"url": "https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=2"
+		}
+	}`,
+	7: `{
+		"type": "http",
+		"path": "response2",
+		"outputs": {
+			"nextComponentId": 8
+		},
+		"data": {
+			"method": "POST",
+			"url": "https://letscountapi.com/aaaa/test",
+			"body": "{\"current_value\": 10}",
+			"header": "{\"Content-Type\": \"application/json\"}"
+		}
+	}`,
+	8: `{
+		"type": "http",
+		"path": "response2",
+		"outputs": {
+			"nextComponentId": 9
+		},
+		"data": {
+			"method": "POST",
+			"url": "https://letscountapi.com/aaaa/test/update",
+			"body": "{\"current_value\": 100}",
+			"header": "{\"Content-Type\": \"application/json\"}"
+		}
+	}`,
+	9: `{
+		"type": "http",
+		"path": "response2",
+		"outputs": {
+			"nextComponentId": 10
+		},
+		"data": {
+			"method": "POST",
+			"url": "https://letscountapi.com/aaaa/test/increment"
+		}
+	}`,
+	10: `{
+		"type": "fromJSON",
+		"path": "response2.data",
 		"outputs": {
 			"nextComponentId": null
 		},
 		"data": {
-			"method": "GET",
-			"url": "https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=2",
-			"header": ""
+			"json": "${response2.body}"
 		}
 	}`,
 }
@@ -129,7 +175,9 @@ func TestExecute(t *testing.T) {
 	}
 	checkString(ctx, t, "default", "{ ( @ text ^ ) }")
 	checkString(ctx, t, "result", "2")
-	checkString(ctx, t, "response.statusCode", "200")
+	checkString(ctx, t, "response1.statusCode", "200")
+	checkString(ctx, t, "response2.statusCode", "200")
+	checkString(ctx, t, "response2.data.current_value", "101")
 }
 
 func checkString(ctx *context.Context, t *testing.T, path string, s string) {

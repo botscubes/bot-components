@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/botscubes/bot-components/context"
+	"github.com/botscubes/bot-components/format"
 )
 
 type HTTPComponent struct {
@@ -16,7 +17,7 @@ type HTTPComponent struct {
 	Outputs ComponentOutputs `json:"outputs"`
 	Data    struct {
 		Url    *string `json:"url"`
-		Body   []byte  `json:"body"`
+		Body   *string `json:"body"`
 		Method *string `json:"method"`
 		Header *string `json:"header"`
 	} `json:"data"`
@@ -32,13 +33,21 @@ func (c *HTTPComponent) Execute(ctx *context.Context) (*any, error) {
 	if c.Data.Url == nil {
 		return nil, errors.New("URL not specified")
 	}
+	var body string = ""
+	if c.Data.Body != nil {
+		var err error
+		body, err = format.Format(*c.Data.Body, ctx)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	result := map[string]any{}
 	client := &http.Client{}
 	req, err := http.NewRequest(
 		*c.Data.Method,
 		*c.Data.Url,
-		bytes.NewReader(c.Data.Body),
+		bytes.NewReader([]byte(body)),
 	)
 	if err != nil {
 		return nil, err

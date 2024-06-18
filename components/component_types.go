@@ -13,4 +13,5 @@ const (
 	TypeToInt     = "toInt"
 	TypeMove      = "move"
 	TypeHTTP      = "http"
+	TypeFromJSON  = "fromJSON"
 )
