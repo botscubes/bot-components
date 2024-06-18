@@ -141,6 +141,10 @@ func (*testIO) ReadText() *string {
 	s := "test"
 	return &s
 }
+
+func (*testIO) PrintPhoto(file []byte) error {
+	return nil
+}
 func (*testIO) PrintText(text string) {
 
 }
