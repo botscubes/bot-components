@@ -142,7 +142,7 @@ func (*testIO) ReadText() *string {
 	return &s
 }
 
-func (*testIO) PrintPhoto(file []byte) error {
+func (*testIO) PrintPhoto(file []byte, name string) error {
 	return nil
 }
 func (*testIO) PrintText(text string) {

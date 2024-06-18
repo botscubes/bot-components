@@ -10,6 +10,9 @@ type PhotoComponent struct {
 	ComponentData
 
 	Outputs ComponentOutputs `json:"outputs"`
+	Data    struct {
+		Name string `json:"name"`
+	} `json:"data"`
 }
 
 func (mc *PhotoComponent) GetOutputs() Outputs {
@@ -21,6 +24,10 @@ func (mc *PhotoComponent) Execute(ctx *context.Context, io io.IO) error {
 	if err != nil {
 		return err
 	}
-	err = io.PrintPhoto([]byte(s))
+	name, err := format.Format(mc.Data.Name, ctx)
+	if err != nil {
+		return err
+	}
+	err = io.PrintPhoto([]byte(s), name)
 	return err
 }
