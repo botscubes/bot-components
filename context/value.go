@@ -65,3 +65,11 @@ func (v *Value) ToBool() (bool, error) {
 	}
 	return val, nil
 }
+
+func (v *Value) ToBytes() ([]byte, error) {
+	val, ok := v.data.([]byte)
+	if !ok {
+		return nil, NewErrTypeAssertion(reflect.TypeOf(v.data).String(), "[]byte")
+	}
+	return val, nil
+}

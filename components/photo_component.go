@@ -19,8 +19,11 @@ func (mc *PhotoComponent) GetOutputs() Outputs {
 	return &mc.Outputs
 }
 func (mc *PhotoComponent) Execute(ctx *context.Context, io io.IO) error {
-	var s string
-	s, err := format.Format(mc.Path, ctx)
+	v, err := ctx.GetValue(mc.Path)
+	if err != nil {
+		return err
+	}
+	b, err := v.ToBytes()
 	if err != nil {
 		return err
 	}
@@ -28,6 +31,6 @@ func (mc *PhotoComponent) Execute(ctx *context.Context, io io.IO) error {
 	if err != nil {
 		return err
 	}
-	err = io.PrintPhoto([]byte(s), name)
+	err = io.PrintPhoto(b, name)
 	return err
 }
