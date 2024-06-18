@@ -14,4 +14,5 @@ const (
 	TypeMove      = "move"
 	TypeHTTP      = "http"
 	TypeFromJSON  = "fromJSON"
+	TypePhoto     = "photo"
 )

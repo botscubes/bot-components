@@ -148,6 +148,13 @@ func NewComponentFromJSON(tp ComponentType, jsonData []byte) (Component, error) 
 			return nil, err
 		}
 		return &c, err
+	case TypePhoto:
+		var c PhotoComponent
+		err := json.Unmarshal(jsonData, &c)
+		if err != nil {
+			return nil, err
+		}
+		return &c, err
 	default:
 		return nil, ErrComponentTypeNotExist
 	}
