@@ -30,6 +30,7 @@ data: {
 outputs: {
     <numeric field name>: number,
     ...
+    idIfError: number
 }
 ```
 

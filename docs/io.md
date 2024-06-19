@@ -11,8 +11,9 @@
 ```golang
 
 type IO interface {
-	PrintText(text string)
-	PrintButtons(text string, buttons []*ButtonData)
+	PrintText(text string) error
+	PrintButtons(text string, buttons []*ButtonData) error
+	PrintPhoto(file []byte, name string) error
 	ReadText() *string
 }
 ```
@@ -20,8 +21,8 @@ type IO interface {
 Окружение, которое будет использовать компоненты, должна реализовать данный интерфейс.
 
 Интерфейс состоит из следующих методов:
-- PrintText - Вывод текста пользователю
-- PrintButtons - Вывод кнопок пользователю с указанием текста опроса
+- PrintText - Вывод текста пользователю.
+- PrintButtons - Вывод кнопок пользователю с указанием текста опроса.
+- PrintPhoto - Вывод картинки пользователю.
 - ReadText - Считывание текста от пользователя, если текст не введен, возвращается нулевое значение - nil.
-
 

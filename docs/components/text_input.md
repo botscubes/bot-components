@@ -12,6 +12,7 @@
 
 ```
 outputs: {
-    nextComponentId: number
+    nextComponentId: number,
+    idIfError: number
 }
 ```
